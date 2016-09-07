@@ -5,3 +5,4 @@ gunicorn
 python-dotenv
 hashids
 djangorestframework
+psycopg2==2.6.1
