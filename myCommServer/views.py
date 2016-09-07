@@ -1,5 +1,6 @@
 from django.shortcuts import render
+from .models import UserMsg
 
 def messages(request):
-
-    return render(request, "messages.html")
+    messages = UserMsg.objects.order_by('receivedDate')
+    return render(request, "messages.html", {'messages': messages})

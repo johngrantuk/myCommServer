@@ -4,11 +4,12 @@
   {% load staticfiles %}
   <h1>MyComm Messages</h1>
 
-  <p>
-    <div id="heading">Message 1</div>
-  </p>
-  <p>
-    <div id="heading">Message 2</div>
-  </p>
+  {% for message in messages %}
+    <div>
+        <h1>From {{message.user}}</h1>
+        <p>published: {{ message.receivedDate }}</p>
+        <p>{{ message.message|linebreaksbr }}</p>
+    </div>
+  {% endfor %}
 
 {% endblock content %}
