@@ -19,5 +19,5 @@ from . import views
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.messages, name='messages'),
-    url(r'^incomingMessage/', views.incomingMessage, name='incomingMessage'),
+    url(r'^incomingMessage/?$', views.incomingMessage, name='incomingMessage'),
 ]
