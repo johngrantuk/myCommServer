@@ -31,6 +31,9 @@ if os.path.isfile(dotenv_file):
     The quoted string on the right hand side is the name of the environment
     variable that is loaded by the dotenv package.
 '''
+rockBlockUsername = os.environ.get("rockBlockUsername")
+rockBlockPassword = os.environ.get("rockBlockPassword")
+iridiumApi = os.environ.get("iridiumApi")
 
 # load database from the DATABASE_URL environment variable
 DATABASES = {}

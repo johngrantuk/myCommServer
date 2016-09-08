@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^$', views.messages, name='messages'),
     url(r'^incomingMessage/?$', views.incomingMessage, name='incomingMessage'),
     url(r'^outgoingMessage/?$', views.outgoingMessage, name='outgoingMessage'),
+    url(r'^testSendMessage/?$', views.testSendMessage, name='testSendMessage'),
 ]

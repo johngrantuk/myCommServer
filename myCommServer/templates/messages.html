@@ -2,71 +2,34 @@
 
 {% block content %}
   {% load staticfiles %}
-  <h1>MyComm Messages</h1>
+  <h3>Message Stream</h3>
 
   {% for message in messages %}
-    <div>
-        <h1>From: {{message.deviceImei.deviceId}}</h1>
-        <p>to: {{ message.destinationId }}</p>
-        <p>sent: {{ message.transmit_time }}</p>
-        <p>received: {{ message.receivedTime }}</p>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <div class="panel-title pull-left">
+            <p>From: {% if message.deviceImei.deviceId %} {{message.deviceImei.deviceId}} {% else %} {{message.user}} {% endif %}</p>
+            <p>To: {{ message.destinationId }}</p>
+          </div>
+          <div class="panel-title pull-right">
+            {% if message.transmit_time %}
+              <p>Sent: {{ message.transmit_time }}</p>
+              <p>Received: {{ message.receivedTime }}</p>
+            {% else %}
+              <p>Sent: {{ message.receivedTime }}</p>
+            {% endif %}
+          </div>
+          <div class="clearfix"></div>
+        </h3>
+      </div>
+
+      <div class="panel-body">
         <p>{{ message.message|linebreaksbr }}</p>
+      </div>
+
     </div>
 
   {% endfor %}
-
-  {% if user.is_authenticated %}
-    <h1>LOGGED IN</h1>
-   {% else %}
-   <h1>NOT LOGGED IN</h1>
-  {% endif %}
-
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target={% if user.is_authenticated %}"#myModal"{% else %}"#loginModal"{% endif %}>
-    Send Message
-  </button>
-
-
-
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-      <form action="{% url 'outgoingMessage' %}" method="post" id="news-create" class="form">{% csrf_token %}
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Send A Message</h4>
-          </div>
-          <div class="modal-body">
-            <input type="text" name="message">
-            Whoop!
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <input type="submit" class="btn btn-primary" value="Save changes" />
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Login"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Login</h4>
-        </div>
-        <div class="modal-body">
-          Sorry you need to login.
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
 {% endblock content %}

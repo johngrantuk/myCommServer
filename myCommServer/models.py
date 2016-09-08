@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from datetime import datetime
 
 
 class MyCommDevice(models.Model):
@@ -8,7 +9,7 @@ class MyCommDevice(models.Model):
     """
     imei = models.TextField(primary_key=True)                               # IMEI of Iridium.
     deviceId = models.TextField(unique=True)                                # Unique ID of MyComm device.
-    createdDate = models.DateTimeField(default=timezone.now)                # Time stamp when created.
+    createdDate = models.DateTimeField(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))                # Time stamp when created.
 
 
 class MyCommMsg(models.Model):
@@ -18,7 +19,7 @@ class MyCommMsg(models.Model):
     deviceImei = models.ForeignKey(MyCommDevice, on_delete=models.CASCADE)  # ID of MyComm that message has come from.
     message = models.TextField()                                            # Main message text.
     destinationId = models.TextField()                                      # Onward message info.
-    receivedTime = models.DateTimeField(default=timezone.now)               # Time stamp of time received on server.
+    receivedTime = models.DateTimeField(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))               # Time stamp of time received on server.
     longitude = models.TextField()                                          # Device lng (from message info)
     latitude = models.TextField()                                           # Device lat (from message info)
     iridium_cep=  models.TextField()                                        # Position accuracy (from message info)
@@ -32,7 +33,7 @@ class UserMsg(models.Model):
     user = models.ForeignKey('auth.User')                                   # User will have to be registered and logged in.
     message = models.TextField()                                            # Main message text.
     destinationId = models.TextField()                                      # ID of MyComm device to send to - i.e. myCommHackaday.
-    receivedTime = models.DateTimeField(default=timezone.now)               # Time stamp.
+    receivedTime = models.DateTimeField(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))               # Time stamp.
 
     def receive(self):
         self.receivedDate = timezone.now()
