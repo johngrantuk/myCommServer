@@ -1,14 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import UserMsg, MyCommMsg, MyCommDevice
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.contrib.auth.models import User
 import binascii
+from itertools import chain
+from operator import attrgetter
 
 
 def messages(request):
-    messages = MyCommMsg.objects.order_by('receivedTime').reverse()
+    myCommMessages = MyCommMsg.objects.order_by('receivedTime').reverse()
+    userMessages = UserMsg.objects.order_by('receivedTime').reverse()
+    messages = sorted(chain(myCommMessages, userMessages),key=attrgetter('receivedTime'),reverse=True)
     return render(request, "messages.html", {'messages': messages})
 
 @csrf_exempt
@@ -43,15 +47,26 @@ def incomingMessage(request):
 @csrf_exempt
 def outgoingMessage(request):
     """
-    Message received from Iridium via API.
+    Message to send from web to Iridium via API.
     """
-    print("\nINCOMING IRIDIUM MESSAGE\n")
+    print("\nOUTGOING IRIDIUM MESSAGE\n")
 
     if request.method == 'POST':                                                    # Confirm it is a POST
+        print(request.POST)
+        message = request.POST["message"]
+        if request.user.is_authenticated():
+            print("Sending message")
+            print(message)
+            print(request.user.username)
+            userMessage = UserMsg(user=request.user, message=message, destinationId="myCommHackaday", receivedTime=timezone.now())
+            userMessage.save()
+
+        """
         u = User.objects.get(username='scotsat')
         postDict = request.POST
         data = binascii.unhexlify(postDict.get("data"))
-        userMessage = UserMsg(user=u, message=data, destinationId="jack", receivedDate=timezone.now())
+        userMessage = UserMsg(user=u, message=data, destinationId="myCommHackaday", receivedDate=timezone.now())
         userMessage.save()
+        """
 
-    return HttpResponse(status=200)
+    return redirect('/')

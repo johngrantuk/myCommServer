@@ -32,7 +32,7 @@ class UserMsg(models.Model):
     user = models.ForeignKey('auth.User')                                   # User will have to be registered and logged in.
     message = models.TextField()                                            # Main message text.
     destinationId = models.TextField()                                      # ID of MyComm device to send to - i.e. myCommHackaday.
-    receivedDate = models.DateTimeField(default=timezone.now)               # Time stamp.
+    receivedTime = models.DateTimeField(default=timezone.now)               # Time stamp.
 
     def receive(self):
         self.receivedDate = timezone.now()

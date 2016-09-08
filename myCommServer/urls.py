@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.messages, name='messages'),
     url(r'^incomingMessage/?$', views.incomingMessage, name='incomingMessage'),
+    url(r'^outgoingMessage/?$', views.outgoingMessage, name='outgoingMessage'),
 ]
