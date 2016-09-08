@@ -6,10 +6,13 @@
 
   {% for message in messages %}
     <div>
-        <h1>From {{message.user}}</h1>
-        <p>published: {{ message.receivedDate }}</p>
+        <h1>From: {{message.deviceImei.deviceId}}</h1>
+        <p>to: {{ message.destinationId }}</p>
+        <p>sent: {{ message.transmit_time }}</p>
+        <p>received: {{ message.receivedTime }}</p>
         <p>{{ message.message|linebreaksbr }}</p>
     </div>
+
   {% endfor %}
 
 {% endblock content %}
