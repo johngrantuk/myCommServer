@@ -34,20 +34,13 @@ if os.path.isfile(dotenv_file):
 rockBlockUsername = os.environ.get("rockBlockUsername")
 rockBlockPassword = os.environ.get("rockBlockPassword")
 iridiumApi = os.environ.get("iridiumApi")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = os.environ.get("DEBUG")
 
 # load database from the DATABASE_URL environment variable
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#+bb%y&=qm2r=@^r+9ar54(v&g9cebut9zyra)5lgah^t7g2*u'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -62,7 +55,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'rest_framework',
     'myCommServer',
 )
 
