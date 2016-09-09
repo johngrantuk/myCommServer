@@ -22,4 +22,7 @@ urlpatterns = [
     url(r'^incomingMessage/?$', views.incomingMessage, name='incomingMessage'),
     url(r'^outgoingMessage/?$', views.outgoingMessage, name='outgoingMessage'),
     url(r'^testSendMessage/?$', views.testSendMessage, name='testSendMessage'),
+    url(r'^loginUser/?$', views.loginUser, name='loginUser'),
+    url(r'^logoutUser/?$', views.logoutUser, name='logoutUser'),
+    url(r'^registerUser/?$', views.registerUser, name='registerUser'),
 ]

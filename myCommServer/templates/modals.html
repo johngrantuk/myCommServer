@@ -1,0 +1,60 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'modals.css' %}">
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <form action="{% url 'outgoingMessage' %}" method="post" id="news-create" class="form">{% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Send A Message</h4>
+        </div>
+        <div class="modal-body">
+          <input type="text" name="message">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Save changes" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- http://bootsnipp.com/snippets/featured/clean-modal-login-form -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	  <div class="modal-dialog">
+				<div class="loginmodal-container">
+					<h1>Login to Your Account</h1><br>
+          <form action="{% url 'loginUser' %}" method="post" id="login" class="form">{% csrf_token %}
+  					<input type="text" name="user" placeholder="Username">
+  					<input type="password" name="pass" placeholder="Password">
+  					<input type="submit" name="login" class="login loginmodal-submit" value="Login">
+				  </form>
+
+				  <div class="login-help">
+					<a href="#" data-toggle="modal" data-target="#registerModal" data-dismiss="modal">Register</a> - <a href="#" data-dismiss="modal">Cancel</a>
+				  </div>
+				</div>
+			</div>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	  <div class="modal-dialog">
+				<div class="loginmodal-container">
+					<h1>Register With MyComm</h1><br>
+          <form action="{% url 'registerUser' %}" method="post" id="login" class="form">{% csrf_token %}
+  					<input type="text" name="username" placeholder="Username">
+  					<input type="password" name="password" placeholder="Password">
+            <input type="text" name="email" placeholder="Email">
+  					<input type="submit" name="login" class="login loginmodal-submit" value="Register">
+				  </form>
+
+				  <div class="login-help">
+            Registration will allow you to send messages to the Hackaday MyComm unit. We may email you with info about the MyComm project but we promise not to spam.
+            <br>
+					  <a href="#" data-dismiss="modal">Cancel</a>
+				  </div>
+				</div>
+			</div>
+</div>

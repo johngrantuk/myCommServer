@@ -11,6 +11,7 @@ from datetime import datetime
 from . import settings
 import urllib
 from urllib.request import urlopen
+from django.contrib.auth import authenticate, login, logout
 
 
 def messages(request):
@@ -105,3 +106,58 @@ def testSendMessage(request):
         return HttpResponse(status=200)
 
     return HttpResponse(status=403)
+
+def loginUser(request):
+    """
+    Login to send messages, etc.
+    """
+
+    if request.method == 'POST':                                                    # Confirm it is a POST
+        print("Login:")
+        username = request.POST["user"]
+        password = request.POST["pass"]
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # the password verified for the user
+            if user.is_active:
+                login(request, user)
+                print("User is valid, active and authenticated")
+            else:
+                print("The password is valid, but the account has been disabled!")
+        else:
+            # the authentication system was unable to verify the username and password
+            print("The username and password were incorrect.")
+
+        return redirect('/')
+    else:
+        return redirect('/')
+
+def logoutUser(request):
+    """
+    Logout user.
+    """
+    logout(request)
+    return redirect('/')
+
+def registerUser(request):
+    """
+    Register a new user.
+    """
+    username = request.POST["username"]
+    password = request.POST["password"]
+    email = request.POST["email"]
+    user = User.objects.create_user(username, email, password)
+    user.save()
+
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        # the password verified for the user
+        if user.is_active:
+            login(request, user)
+            print("User is valid, active and authenticated")
+        else:
+            print("The password is valid, but the account has been disabled!")
+    else:
+        # the authentication system was unable to verify the username and password
+        print("The username and password were incorrect.")
+    return redirect('/')
