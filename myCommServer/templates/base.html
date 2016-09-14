@@ -30,6 +30,7 @@
         <div id="navbar" class="navbar-collapse collapse">
 
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://hackaday.io/project/11802-mycomm" target="_blank">Hackaday Prize Entry</a></li>
             <li><a href="#" data-toggle="modal" data-target={% if user.is_authenticated %}"#myModal"{% else %}"#loginModal"{% endif %}>Send Message</a></li>
             {% if user.is_authenticated %}
               <li><a href="{% url 'logoutUser' %}">Logout</a></li>

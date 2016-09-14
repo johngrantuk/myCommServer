@@ -2,32 +2,31 @@
 
 {% block content %}
   {% load staticfiles %}
-  <h3>Message Stream</h3>
+  <h4>Message Stream</h4>
 
   {% for message in messages %}
-    <div class="panel panel-primary">
+    <div class="panel panel-info">
       <div class="panel-heading">
         <h3 class="panel-title">
           <div class="panel-title pull-left">
-            <p>From: {% if message.deviceImei.deviceId %} {{message.deviceImei.deviceId}} {% else %} {{message.user}} {% endif %}</p>
-            <p>To: {{ message.destinationId }}</p>
+            <span>To: {{ message.destinationId }} </span><span class="time">{{ message.receivedTime }}</span>
           </div>
           <div class="panel-title pull-right">
-            {% if message.transmit_time %}
-              <p>Sent: {{ message.transmit_time }}</p>
-              <p>Received: {{ message.receivedTime }}</p>
-            {% else %}
-              <p>Sent: {{ message.receivedTime }}</p>
-            {% endif %}
+            <div>From: {% if message.deviceImei.deviceId %} {{message.deviceImei.deviceId}} {% else %} {{message.user}} {% endif %}
+              {% if message.transmit_time %}
+                 <span class="time">{{ message.transmit_time }}</span>
+              {% else %}
+                 <span class="time">{{ message.receivedTime }}</span>
+              {% endif %}
+            </div>
           </div>
           <div class="clearfix"></div>
         </h3>
       </div>
 
       <div class="panel-body">
-        <p>{{ message.message|linebreaksbr }}</p>
+        {{ message.message|linebreaksbr }}
       </div>
-
     </div>
 
   {% endfor %}

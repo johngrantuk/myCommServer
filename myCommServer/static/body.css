@@ -2,3 +2,18 @@ body {
   min-height: 2000px;
   padding-top: 70px;
 }
+
+.navbar-default {
+    background-color: #d9edf7;
+    border-color: #E7E7E7;
+}
+
+.time {
+  font-weight: normal;
+  font-size: 15px;
+  padding-left: 8px;
+}
+
+.panel-body {
+  font-size: 18px;
+}
