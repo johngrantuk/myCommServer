@@ -12,13 +12,17 @@ from . import settings
 import urllib
 from urllib.request import urlopen
 from django.contrib.auth import authenticate, login, logout
+from ratelimit.decorators import ratelimit
 
 
 def messages(request):
-    myCommMessages = MyCommMsg.objects.order_by('receivedTime').reverse()
-    userMessages = UserMsg.objects.order_by('receivedTime').reverse()
-    messages = sorted(chain(myCommMessages, userMessages),key=attrgetter('receivedTime'),reverse=True)
-    return render(request, "messages.html", {'messages': messages})
+    """
+    Main view that shows message stream of messages sent from MyComm device and to MyComm device by registered users.
+    """
+    myCommMessages = MyCommMsg.objects.order_by('receivedTime').reverse()                           # Retrieve all messages received from the MyComm device.
+    userMessages = UserMsg.objects.order_by('receivedTime').reverse()                               # Retrieve all messages sent by registered users to the MyComm device.
+    messages = sorted(chain(myCommMessages, userMessages),key=attrgetter('receivedTime'),reverse=True) # Sorts the messages in reverse date order.
+    return render(request, "messages.html", {'messages': messages})                                 # Render main message stream view.
 
 @csrf_exempt
 def incomingMessage(request):
@@ -50,51 +54,48 @@ def incomingMessage(request):
 
 
 @csrf_exempt
+@ratelimit(key='user_or_ip', rate='3/d')
 def outgoingMessage(request):
     """
     Message to send from web to Iridium via API.
     """
     print("\nOUTGOING IRIDIUM MESSAGE\n")
 
-    if request.method == 'POST':                                                    # Confirm it is a POST
-        print(request.POST)
-        message = request.POST["message"]
-        if request.user.is_authenticated():
-            print("Sending message")
-            print(message)
-            print(request.user.username)
-            #userMessage = UserMsg(user=request.user, message=message, destinationId="myCommHackaday", receivedTime=timezone.now())
-            userMessage = UserMsg(user=request.user, message=message, destinationId="myCommHackaday", receivedTime=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-            userMessage.save()
+    was_limited = getattr(request, 'limited', False)
 
-            try:
-                myCommDevice = MyCommDevice.objects.get(deviceId="myCommHackaday")                # Check if the IMEI of device is registered. If not return Forbidden
+    print(was_limited)
+    if was_limited:
+        return render(request, "rateLimit.html")                                    # User has sent too many messages.
+
+    if request.method == 'POST':                                                    # Confirm it is a POST
+        message = request.POST["message"]                                           # Gets message from POST.
+        device = "myCommHackaday"                                                   # For now we only have demo MyComm device.
+
+        print(request.user.username + " Sending message: " + message + " to device: " + device)
+
+        if request.user.is_authenticated():                                         # Only logged in users can send a message.
+
+            try:                                                                    # Check if the IMEI of reveiving device is registered. If not return Forbidden
+                myCommDevice = MyCommDevice.objects.get(deviceId=device)
             except MyCommDevice.DoesNotExist:
                 print("No Device found.")
                 return HttpResponse(status=403)
 
+            #userMessage = UserMsg(user=request.user, message=message, destinationId="myCommHackaday", receivedTime=timezone.now())
+            userMessage = UserMsg(user=request.user, message=message, destinationId="myCommHackaday", receivedTime=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            userMessage.save()                                                      # Save user message in database.
+
             post_data = [('imei', myCommDevice.imei),('username', settings.rockBlockUsername),('password', settings.rockBlockPassword),('data', binascii.hexlify(str.encode(message)))]     # a sequence of two element tuples
-            print(post_data)
-            print(urllib.parse.urlencode(post_data).encode("utf-8"))
-            print(settings.iridiumApi)
-            result = urlopen(settings.iridiumApi, urllib.parse.urlencode(post_data).encode("utf-8"))
+            result = urlopen(settings.iridiumApi, urllib.parse.urlencode(post_data).encode("utf-8")) # Creates a POST request and sends to the Iridium API.
             content = result.read()
             print(content)
-
-        """
-        u = User.objects.get(username='scotsat')
-        postDict = request.POST
-        data = binascii.unhexlify(postDict.get("data"))
-        userMessage = UserMsg(user=u, message=data, destinationId="myCommHackaday", receivedDate=timezone.now())
-        userMessage.save()
-        """
 
     return redirect('/')
 
 @csrf_exempt
 def testSendMessage(request):
     """
-    Test sending to API.
+    Test sending to API. UNUSED.
     """
 
     if request.method == 'POST':                                                    # Confirm it is a POST
@@ -109,18 +110,18 @@ def testSendMessage(request):
 
 def loginUser(request):
     """
-    Login to send messages, etc.
+    Login user to send messages, etc.
     """
 
     if request.method == 'POST':                                                    # Confirm it is a POST
         print("Login:")
         username = request.POST["user"]
         password = request.POST["pass"]
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            # the password verified for the user
+        user = authenticate(username=username, password=password)                   # Authenticates user using Django.
+
+        if user is not None:                                                        # The password verified for the user
             if user.is_active:
-                login(request, user)
+                login(request, user)                                                # Logs user in.
                 print("User is valid, active and authenticated")
             else:
                 print("The password is valid, but the account has been disabled!")
@@ -146,19 +147,17 @@ def registerUser(request):
     username = request.POST["username"]
     password = request.POST["password"]
     email = request.POST["email"]
-    user = User.objects.create_user(username, email, password)
-    user.save()
+    user = User.objects.create_user(username, email, password)                          # Creates new users using Django.
+    user.save()                                                                         # Save new user to database.
 
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        # the password verified for the user
+    user = authenticate(username=username, password=password)                           # Logs user in so they can send messages, etc.
+    if user is not None:                                                                # the password verified for the user
         if user.is_active:
             login(request, user)
             print("User is valid, active and authenticated")
         else:
             print("The password is valid, but the account has been disabled!")
-    else:
-        # the authentication system was unable to verify the username and password
+    else:                                                                               # the authentication system was unable to verify the username and password
         print("The username and password were incorrect.")
     return redirect('/')
 

@@ -10,18 +10,18 @@
   function myMap() {
 
     var mapCanvas = document.getElementById("map");
-    var myCenter = new google.maps.LatLng({{lat}},{{lng}});
+    var myCenter = new google.maps.LatLng({{lat}},{{lng}});                   // Uses the lat/lng permission passed by Django view.
     var mapOptions = {
       center: myCenter,
       zoom: 8
     };
     var map = new google.maps.Map(mapCanvas, mapOptions);
-    var marker = new google.maps.Marker({
+    var marker = new google.maps.Marker({                                     // Creates a marker at lat/lng position.
       position: myCenter,
       animation: google.maps.Animation.DROP
     });
     marker.setMap(map);
-    var infowindow = new google.maps.InfoWindow({
+    var infowindow = new google.maps.InfoWindow({                             // Info window above location marker that shows message.
       content: "{{text|linebreaksbr}}"
     });
     infowindow.open(map,marker);

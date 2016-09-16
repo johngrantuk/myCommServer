@@ -6,4 +6,5 @@ python-dotenv
 hashids
 djangorestframework
 whitenoise
+django-ratelimit
 psycopg2==2.6.1
