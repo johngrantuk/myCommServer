@@ -22,7 +22,7 @@
     });
     marker.setMap(map);
     var infowindow = new google.maps.InfoWindow({
-      content: "{{text}}"
+      content: "{{text|linebreaksbr}}"
     });
     infowindow.open(map,marker);
   }
