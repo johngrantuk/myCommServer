@@ -17,3 +17,8 @@ body {
 .panel-body {
   font-size: 18px;
 }
+
+.location {
+  font-size: 15px;
+  padding-top: 12px;
+}

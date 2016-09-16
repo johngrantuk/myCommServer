@@ -15,6 +15,9 @@
             <div>From: {% if message.deviceImei.deviceId %} {{message.deviceImei.deviceId}} {% else %} {{message.user}} {% endif %}
               {% if message.transmit_time %}
                  <span class="time">{{ message.transmit_time }}</span>
+                 <a href="{% url 'location' %}?lat={{ message.latitude|urlencode}}&amp;lng={{message.longitude|urlencode}}&amp;text={{message.message|urlencode}}" target="_blank">
+                   <span class="glyphicon glyphicon-map-marker"></span>
+                 </a>
               {% else %}
                  <span class="time">{{ message.receivedTime }}</span>
               {% endif %}

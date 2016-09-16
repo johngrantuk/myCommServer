@@ -161,3 +161,14 @@ def registerUser(request):
         # the authentication system was unable to verify the username and password
         print("The username and password were incorrect.")
     return redirect('/')
+
+def location(request):
+    """
+    Shows location on Google Maps.
+    """
+    lat = request.GET['lat']
+    lng = request.GET['lng']
+    text = request.GET['text']
+    print("Lat: " + lat)
+
+    return render(request, "location.html", {'lat': lat, 'lng':lng, 'text':text})
