@@ -171,4 +171,4 @@ def location(request):
     text = request.GET['text']
     print("Lat: " + lat)
 
-    return render(request, "location.html", {'lat': lat, 'lng':lng, 'text':text})
+    return render(request, "location.html", {'lat': lat, 'lng':lng, 'text':text, 'API_KEY':settings.GOOGLE_API_KEY})

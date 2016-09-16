@@ -36,6 +36,7 @@ rockBlockPassword = os.environ.get("rockBlockPassword")
 iridiumApi = os.environ.get("iridiumApi")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG")
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 
 # load database from the DATABASE_URL environment variable
 DATABASES = {}
