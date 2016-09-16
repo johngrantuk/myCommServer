@@ -18,7 +18,12 @@ body {
   font-size: 18px;
 }
 
-.location {
-  font-size: 15px;
-  padding-top: 12px;
+.myCommDevice > .panel-heading {
+    background-image: none;
+    background-color: #C9FFC8;
+}
+
+.server > .panel-heading {
+    background-image: none;
+    background-color: #B6E8E3;
 }

@@ -5,7 +5,7 @@
   <h4>Message Stream</h4>
 
   {% for message in messages %}
-    <div class="panel panel-info">
+    <div class="panel panel-info {% if message.transmit_time %}myCommDevice{% else %}server{% endif %}">
       <div class="panel-heading">
         <h3 class="panel-title">
           <div class="panel-title pull-left">
